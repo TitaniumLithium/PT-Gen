@@ -34,6 +34,7 @@ PT站点用简介生成工具
 | IMDb | imdb | https://www.imdb.com/title/tt:d |
 | 番组计划| bangumi | https://bgm.tv/subject/:d , http://bangumi.tv/subject/:d , http://chii.in/subject/:d |
 | Steam | steam | https://steamcommunity.com/app/:d , http://store.steampowered.com/app/:d , http://store.steampowered.com/app/:d/:s |
+| GOG | gog | https://www.gog.com/:s/game/:s | 2022.07.23更新支持GOG |
 
 > 注意：在`v0.4.0`之前，imdb链接会通过豆瓣查询并生成对应的豆瓣信息，而之后需要
 以 `&site=douban&sid=tt\d{7,8}`的形式传入查询参数时，才会尝试从Douban查询对应IMDb号的豆瓣信息，

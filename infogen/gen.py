@@ -9,7 +9,7 @@ import requests
 from bs4 import BeautifulSoup
 from html2bbcode.parser import HTML2BBCode
 
-__version__ = "0.5.3"
+__version__ = "0.5.3plus_gog"
 __author__ = "Rhilip"
 
 support_list = [
@@ -18,7 +18,8 @@ support_list = [
     ("steam", re.compile("(https?://)?(store\.)?steam(powered|community)\.com/app/(?P<sid>\d+)/?")),
     ("bangumi", re.compile("(https?://)?(bgm\.tv|bangumi\.tv|chii\.in)/subject/(?P<sid>\d+)/?")),
     ('indienova', re.compile("(https?://)?indienova\.com/game/(?P<sid>\S+)")),
-    ("epic", re.compile("(https?://)?www\.epicgames\.com/store/[a-zA-Z-]+/product/(?P<sid>\S+)/\S?"))
+    ("epic", re.compile("(https?://)?www\.epicgames\.com/store/[a-zA-Z-]+/product/(?P<sid>\S+)/\S?")),
+    ("gog", re.compile("(https?://)?www\.gog\.com/[a-zA-Z]+/game/(?P<sid>\S+)"))
 ]
 
 support_site_list = list(map(lambda x: x[0], support_list))
@@ -685,3 +686,92 @@ class Gen(object):
 
         self.ret["format"] = descr
         self.ret.update(data)
+
+    def _gen_gog(self):
+        gog_game_data = {}
+
+        gog_url = "https://www.gog.com/zh/game/{}".format(self.sid)
+
+        gog_game_data["url"] = gog_url
+
+        gog_bs = get_page(gog_url, bs_= True)
+
+        #url不存在
+        if gog_bs.title.text.find("DRM-free") > -1:
+            self.ret["error"] = "The corresponding resource does not exist."
+            return
+
+        #封面
+        gog_cover = gog_bs.find(property = "og:image")["content"]
+        gog_game_data["cover"] = gog_cover
+
+        #标题  这里的json也有image属性
+        gog_title = json.loads(gog_bs.script.text)["name"]
+        gog_game_data["name"] = gog_title
+
+        #介绍
+        gog_descr = gog_bs.find("div", class_ = "description")
+        gog_game_data["descr"] = html2ubb(str(gog_descr)).strip()
+
+        #html预筛选
+        gog_details_row = gog_bs.findAll("div", class_ = "table__row details__row")
+
+        #类型
+        gog_genre = gog_details_row[0].findAll("a", class_ = "details__link")
+        gog_game_data["genre"] = list(map(lambda t: t.get_text(strip=True), gog_genre)) or []
+
+        #标签
+        gog_tags = gog_details_row[1].findAll("span", class_ = "details__link-text")
+        gog_game_data["tags"] = list(map(lambda t: t.get_text(strip=True), gog_tags)) or []
+
+        #html预筛选
+        gog_details_rating = gog_bs.findAll("div", class_ = "table__row details__rating details__row")
+
+        #操作系统
+        gog_os = gog_details_rating[0].find("div", class_ = "details__content table__row-content")
+        gog_game_data["os"] = gog_os.get_text(strip=True)
+
+        #gog_release发布时间
+        gog_release = gog_details_rating[1].find("span")
+        gog_game_data["release"] = eval(re.search(r"'(.*?)'",gog_release.get_text(strip=True)).group(0))
+
+        #gog_dev开发商
+        gog_dev = gog_details_rating[2].findAll("a", class_ = "details__link")
+        gog_game_data["dev"] = list(map(lambda t: t.get_text(strip=True), gog_dev)) or []
+
+        #gog_size体积大小
+        gog_size = gog_details_rating[3].find("div", class_ = "details__content table__row-content")
+        gog_game_data["size"] = gog_size.get_text(strip=True)
+
+        #gog_language语言
+        gog_language = gog_bs.findAll("div", "details__languages-row--cell details__languages-row--language-name")
+        gog_game_data["language"] = list(map(lambda t: t.get_text(strip=True), gog_language)) or []
+
+        #gog_rate评分
+        gog_rate = gog_bs.find("div", class_ = "rating productcard-rating__score") or ""
+        if gog_rate:
+            gog_game_data["rate"] = gog_rate.get_text(strip=True)
+
+        #gog_screenshots图片列表
+        gog_screenshots = gog_bs.find_all("img", class_ = "productcard-thumbnails-slider__image")
+        gog_game_data["screenshot"] = list(map(lambda x: x['src'], gog_screenshots)) or []
+
+        #BBcode
+        descr = ""
+        descr += "[img]{}[/img]\n\n".format(gog_game_data["cover"]) if gog_game_data.get("cover") else ""
+        descr += "【基本信息】\n\n"
+        descr += "游戏名: {}\n".format(gog_game_data["name"]) if gog_game_data.get("name") else ""
+        descr += "GOG页面: " + gog_game_data["url"] + "\n"
+        descr += ("游戏语种: " + " | ".join(gog_game_data["language"]) + "\n") if gog_game_data.get("language") else ""
+        descr += ("类型: " + " | ".join(gog_game_data["genre"]) + "\n") if gog_game_data.get("genre") else ""
+        descr += ("标签: " + " | ".join(gog_game_data["tags"]) + "\n") if gog_game_data.get("tags") else ""
+        descr += ("发行时间: " + gog_game_data["release"] + "\n") if gog_game_data.get("release") else ""
+        descr += ("体积大小: " + gog_game_data["size"] + "\n") if gog_game_data.get("size") else ""
+        descr += ("GOG用户评分: " + (gog_game_data["rate"]) + "\n") if gog_game_data.get("rate") else ""
+        descr += "\n"
+        descr += "【游戏简介】\n\n{}\n\n".format(gog_game_data['descr']) if gog_game_data.get('descr') else ""
+        descr += "【游戏截图】\n\n{}\n\n".format('\n'.join(map(lambda d: "[img]{}[/img]".format(d), gog_game_data['screenshot']))) if gog_game_data.get('screenshot') else ""
+
+        self.ret["format"] = descr
+        self.ret.update(gog_game_data)
+

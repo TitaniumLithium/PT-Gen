@@ -54,6 +54,11 @@ if __name__ == '__main__':
         "https://www.epicgames.com/store/zh-CN/product/outerwilds/home",  # Epic Normal
     ]
 
+    gog_link_list = [
+        "https://www.gog.com/zh/game/stard",  #GOG not exist
+        "https://www.gog.com/zh/game/stardew_valley", #GOG Normal
+    ]
+
     other_link_list = [
         "http://jdaklvhgfad.com/adfad",  # No support link
     ]
@@ -69,7 +74,7 @@ if __name__ == '__main__':
     ]
 
     test_link_list = [
-        {'site': 'imdb', 'sid': 'tt0111161'}
+        #{'site': 'imdb', 'sid': 'tt0111161'}
     ]
     # test_link_list.extend(douban_link_list)
     # test_link_list.extend(imdb_link_list)
@@ -77,6 +82,7 @@ if __name__ == '__main__':
     # test_link_list.extend(steam_link_list)
     # test_link_list.extend(indienova_link_list)
     # test_link_list.extend(epic_link_list)
+    test_link_list.extend(gog_link_list)
     # test_link_list.extend(other_link_list)
     # test_link_list.extend(dict_link_list)
 
