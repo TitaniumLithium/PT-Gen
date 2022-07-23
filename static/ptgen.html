@@ -6,11 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="PT Gen | 电影、动漫、游戏简介生成工具，根据豆瓣、IMDb、Bangumi、Steam、Epic、Indienova链接自动生成简介">
+    <meta name="description" content="PT Gen | 电影、动漫、游戏简介生成工具，根据豆瓣、IMDb、Bangumi、Steam、Epic、Indienova GOG链接自动生成简介">
     <meta name="keywords" content="电影查询 电影简介生成 电影介绍生成 豆瓣简介 游戏简介生成" />
     <meta name="author" content="BFDZ">
 
-    <title>PT Gen 简介查询生成工具 | 豆瓣 IMDb Bangumi Steam Epic Indienova</title>
+    <title>PT Gen 简介查询生成工具 | 豆瓣 IMDb Bangumi Steam Epic Indienova GOG</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
@@ -55,7 +55,7 @@ ul.timeline > li:before{content:' ';background:white;display:inline-block;positi
             <ul class="nav navbar-nav navbar-right">
 				<li><a href="//www.bfdz.ink/" target="_blank">Blog</a>
 				</li>
-                <li><a href="//github.com/BFDZ/PT-Gen" target="_blank">Docs</a>
+                <li><a href="//github.com/TitaniumLithium/PT-Gen/" target="_blank">Docs</a>
             </ul>
         </div>
     </div>
@@ -67,7 +67,7 @@ ul.timeline > li:before{content:' ';background:white;display:inline-block;positi
             <div>
                 <div class="form-inline">
                     <div class="form-group">
-                        <label class="sr-only" for="input_value">Input value</label>
+                        <label class="sr-only" for="input_value">查询链接</label>
                         <input type="text" class="form-control" placeholder="名称或豆瓣、IMDb、Bangumi、Steam等资源链接"
                                id="input_value"/>
                     </div>
@@ -95,12 +95,16 @@ ul.timeline > li:before{content:' ';background:white;display:inline-block;positi
             <hr>
             <div id="support_url">
                 <h4>支持网站</h4>
-                <a href="https://movie.douban.com/" target="_blank">豆瓣电影</a> | <a href="https://www.imdb.com/" target="_blank">IMDb</a> | <a href="https://bangumi.tv/" target="_blank">Bangumi</a> | <a href="https://store.steampowered.com/games/" target="_blank">Steam</a> | <a href="https://epicgames.com/" target="_blank">Epic</a> | <a href="https://indienova.com/" target="_blank">Indienova</a>
+                <a href="https://movie.douban.com/" target="_blank">豆瓣电影</a> | <a href="https://www.imdb.com/" target="_blank">IMDb</a> | <a href="https://bangumi.tv/" target="_blank">Bangumi</a> | <a href="https://store.steampowered.com/games/" target="_blank">Steam</a> | <a href="https://epicgames.com/" target="_blank">Epic</a> | <a href="https://indienova.com/" target="_blank">Indienova</a> | <a href="https://www.gog.com" target="_blank">GOG</a>
             </div>
             <hr>
             <div id="gen_history">
                 <h4>更新历史</h4>
                 <ul class="timeline">
+                <li>
+                <a href="#timeline_2022_07_23" data-toggle="collapse" class="float-right">2022-07-23</a>
+                <p id="timeline_2022_07_23" class="collapse in">增加GOG链接支持</p>
+                </li>
                 <li>
                 <a href="#timeline_2019_07_09" data-toggle="collapse" class="float-right">2019-07-09</a>
                 <p id="timeline_2019_07_09" class="collapse in">增加API Point 选择，<b>请注意不同API请求时间或结果可能不同。</b></p>
