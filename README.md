@@ -12,6 +12,8 @@ PT-Gen 可根据豆瓣、IMDb、Bangumi、Steam、GOG 链接自动生成简介�
 
 GOG regex: `(https?://)?(www\.)?gog\.com/[a-zA-Z]?[a-zA-Z]?/?game/(?P<sid>\S+)`
 
+引入了`html2bbcode3`以代替`html2bbcode`请参照https://github.com/issaccv/html2bbcode3 安装
+
 需要请求豆瓣链接请换用 Rhilip 大佬开发的 cfworker 版本：https://github.com/Rhilip/pt-gen-cfworker
 
 ## 演示
