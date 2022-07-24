@@ -6,6 +6,7 @@ PT站点用简介生成工具
 ### 1) 请求地址
 
 > https://api.rhilip.info/tool/movieinfo/gen
+> https://ptgen.titaniumlithium.me/infogen
 
 ### 2) 调用方式：HTTP get|post
 

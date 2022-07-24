@@ -1,4 +1,4 @@
-PT-Gen 可根据豆瓣、IMDb、Bangumi、Steam 链接自动生成简介。
+PT-Gen 可根据豆瓣、IMDb、Bangumi、Steam GOG 链接自动生成简介。
 
 这个工具提取自 Rhilip 开发的 [PT-help](https://github.com/Rhilip/PT-help) ，去掉了源码中与 PT-Gen 不相关的代码和模块。
 
@@ -7,12 +7,15 @@ PT-Gen 可根据豆瓣、IMDb、Bangumi、Steam 链接自动生成简介。
 2020年8月19日，豆瓣的api_key全部失效，此项目 python 版已无法正常使用，无限期停止维护。
 
 游戏平台的功能仍可使用 2022/07/23 为其添加GOG链接支持
+支持GOG链接的demo:  https://ptgen.titaniumlithium.me
+GOG regex: (https?://)?(www\.)?gog\.com/[a-zA-Z]?[a-zA-Z]?/?game/(?P<sid>\S+)
 
 请换用 Rhilip 大佬开发的 cfworker 版本：https://github.com/Rhilip/pt-gen-cfworker
 
 ## 演示
 
 https://www.bfdz.ink/tools/ptgen
+https://ptgen.titaniumlithium.me
 
 ## Wiki
 
