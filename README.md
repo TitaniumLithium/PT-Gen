@@ -1,4 +1,4 @@
-PT-Gen 可根据豆瓣、IMDb、Bangumi、Steam GOG 链接自动生成简介。
+PT-Gen 可根据豆瓣、IMDb、Bangumi、Steam、GOG 链接自动生成简介。
 
 这个工具提取自 Rhilip 开发的 [PT-help](https://github.com/Rhilip/PT-help) ，去掉了源码中与 PT-Gen 不相关的代码和模块。
 
@@ -17,6 +17,7 @@ GOG regex: `(https?://)?(www\.)?gog\.com/[a-zA-Z]?[a-zA-Z]?/?game/(?P<sid>\S+)`
 ## 演示
 
 https://www.bfdz.ink/tools/ptgen
+
 https://ptgen.titaniumlithium.me
 
 ## Wiki
