@@ -7,7 +7,7 @@ import json
 import random
 import requests
 from bs4 import BeautifulSoup
-from html2bbcode.parser import HTML2BBCode
+from html2bbcode3.parser import HTML2BBCode
 
 __version__ = "0.5.3plus_gog"
 __author__ = "Rhilip"
@@ -711,7 +711,17 @@ class Gen(object):
 
         #介绍
         gog_descr = gog_bs.find("div", class_ = "description")
-        gog_game_data["descr"] = html2ubb(str(gog_descr)).strip()
+        gog_game_data["descr"] = (
+            html2ubb(str(gog_descr)).strip()
+            .replace(" ", "")
+            .replace("\n\n\n\n\n", "")
+            .replace("\n\n", "")
+            .replace("]\n", "]")
+            .replace("\n[/url]", "[/url]")
+            .replace("\t", "")
+            .strip()
+            + "\n"
+        )
 
         #html预筛选
         gog_details_row = gog_bs.findAll("div", class_ = "table__row details__row")
