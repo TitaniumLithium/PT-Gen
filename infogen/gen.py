@@ -19,7 +19,7 @@ support_list = [
     ("bangumi", re.compile("(https?://)?(bgm\.tv|bangumi\.tv|chii\.in)/subject/(?P<sid>\d+)/?")),
     ('indienova', re.compile("(https?://)?indienova\.com/game/(?P<sid>\S+)")),
     ("epic", re.compile("(https?://)?www\.epicgames\.com/store/[a-zA-Z-]+/product/(?P<sid>\S+)/\S?")),
-    ("gog", re.compile("(https?://)?www\.gog\.com/[a-zA-Z]?/?game/(?P<sid>\S+)"))
+    ("gog", re.compile("(https?://)?(www\.)?gog\.com/[a-zA-Z]?[a-zA-Z]?/?game/(?P<sid>\S+)"))
 ]
 
 support_site_list = list(map(lambda x: x[0], support_list))

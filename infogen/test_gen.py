@@ -56,6 +56,8 @@ if __name__ == '__main__':
 
     gog_link_list = [
         "https://www.gog.com/zh/game/stard",  #GOG not exist
+        "gog.com/zh/game/stardew_valley",  #GOG without www&https
+        "https://www.gog.com/game/stardew_valley",  #GOG without language
         "https://www.gog.com/zh/game/stardew_valley", #GOG Normal
     ]
 
