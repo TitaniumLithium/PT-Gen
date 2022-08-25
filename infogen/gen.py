@@ -661,7 +661,7 @@ class Gen(object):
             data["min_req"][system_type] = list(map(lambda x: "{}: {}".format(x['title'], x['minimum']), details))
             data["max_req"][system_type] = list(map(lambda x: "{}: {}".format(x['title'], x['recommended']), details))
 
-        data['level'] = list(map(lambda x: x['src'], requirements["legalTags"]))
+        data['level'] = list(map(lambda x: x['src'], requirements["legalTags"])) if requirements.get("legalTags") else ""
 
         # 生成bbcode
         descr = ""
