@@ -713,7 +713,7 @@ class Gen(object):
         gog_descr = gog_bs.find("div", class_ = "description")
         gog_game_data["descr"] = (
             html2ubb(str(gog_descr)).strip()
-            .replace(" ", "")
+            .replace("  ", "")
             .replace("\n\n\n\n\n", "")
             .replace("\n\n", "")
             .replace("]\n", "]")
