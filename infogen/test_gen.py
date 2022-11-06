@@ -50,8 +50,12 @@ if __name__ == '__main__':
     ]
 
     epic_link_list = [
-        "https://www.epicgames.com/store/zh-CN/product/oute",  # Epic not exist
-        "https://www.epicgames.com/store/zh-CN/product/outerwilds/home",  # Epic Normal
+        "https://store.epicgames.com/zh-CN/p/oute",  # Epic not exist
+        "https://store.epicgames.com/zh-CN/p/outerwilds",  # Epic Normal
+        "https://store.epicgames.com/zh-Hant/p/control",  # Edit regex for other language
+        "https://store.epicgames.com/zh-CN/p/borderlands-3",  # Fix KeyError('recommended'), language "-"
+        "https://store.epicgames.com/zh-CN/p/grand-theft-auto-v?lang=zh-CN",  # Fix miss site key
+        "https://store.epicgames.com/zh-CN/p/saints-row",  #Fix KeyError('legalTags')
     ]
 
     gog_link_list = [

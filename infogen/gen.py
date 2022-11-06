@@ -18,7 +18,7 @@ support_list = [
     ("steam", re.compile("(https?://)?(store\.)?steam(powered|community)\.com/app/(?P<sid>\d+)/?")),
     ("bangumi", re.compile("(https?://)?(bgm\.tv|bangumi\.tv|chii\.in)/subject/(?P<sid>\d+)/?")),
     ('indienova', re.compile("(https?://)?indienova\.com/game/(?P<sid>\S+)")),
-    ("epic", re.compile("(https?://)?www\.epicgames\.com/store/[a-zA-Z-]+/product/(?P<sid>\S+)/\S?")),
+    ("epic", re.compile("(https?://)?store\\.epicgames\\.com/[a-zA-Z-]+/p/(?P<sid>[a-zA-Z0-9_-]+)/?")),
     ("gog", re.compile("(https?://)?(www\.)?gog\.com/[a-zA-Z]?[a-zA-Z]?/?game/(?P<sid>\S+)"))
 ]
 
@@ -646,7 +646,12 @@ class Gen(object):
         data["epic_link"] = "https://www.epicgames.com/store{}".format(page["_urlPattern"])  # 商店链接
         data['desc'] = page["data"]["about"]["description"]  # 游戏简介
         data["poster"] = data["logo"] = page["data"]["hero"]["logoImage"]["src"]  # 游戏logo
-        data["screenshot"] = list(map(lambda x: x['src'], page["data"]["gallery"]["galleryImages"]))  # 游戏截图
+        data["screenshot"] = list(
+            map(
+                lambda x: x.get("src", ""),
+                page.get("data", {}).get("gallery", {}).get("galleryImages", []),
+            )
+        )  # 游戏截图
 
         # 语言 最低配置 推荐配置 评级
         requirements = page["data"]["requirements"]
