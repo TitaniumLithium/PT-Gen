@@ -640,54 +640,103 @@ class Gen(object):
             self.ret["error"] = "The corresponding resource does not exist."
             return
 
+        if epic_api_json.get("error"):
+            self.ret["error"] = "The corresponding resource does not exist."
+            return
+        
         # 从顶层字典中获得page
-        page = epic_api_json["pages"][0]
-        data["name"] = page["productName"]  # 游戏名称
-        data["epic_link"] = "https://www.epicgames.com/store{}".format(page["_urlPattern"])  # 商店链接
-        data['desc'] = page["data"]["about"]["description"]  # 游戏简介
-        data["poster"] = data["logo"] = page["data"]["hero"]["logoImage"]["src"]  # 游戏logo
+        page: dict = epic_api_json["pages"][0]
+        data["name"] = page.get("productName", "")  # 游戏名称
+        data["epic_link"] = f"https://store.epicgames.com/zh-CN/p/{self.sid}"  # 商店链接
+
+        page_data: dict = page.get("data", {})
+        data["desc"] = page_data.get("about", {}).get("description", "")  # 游戏简介
+        data["poster"] = data["logo"] = (
+            page_data.get("hero", {}).get("logoImage", {}).get("src", "")
+        )  # 游戏logo
+
         data["screenshot"] = list(
             map(
                 lambda x: x.get("src", ""),
-                page.get("data", {}).get("gallery", {}).get("galleryImages", []),
+                page_data.get("gallery", {}).get("galleryImages", []),
             )
         )  # 游戏截图
 
         # 语言 最低配置 推荐配置 评级
-        requirements = page["data"]["requirements"]
-        data["language"] = requirements["languages"]
+        requirements = page_data.get("requirements", {})
+
+        # 因为有的条目的语言会出现类似
+        # ['语音：英语', '法语', '德语', ..., '文本：繁体中文、简体中文', ' 2020 年 1 月 30 日即将上线：日语']
+        # 的情况，所以将没有冒号的条目向上合并
+        for language in requirements.get("languages", []):
+            data.setdefault("language", [])
+            if ":" not in language and "：" not in language and len(data["language"]):
+                data["language"][-1] += "、{}".format(language)
+            else:
+                if "-" not in language:
+                    data["language"].append(language)
+                else:
+                    # ['语音：英语、法语、意大利语、德语、西班牙语、日语、韩语、简体中文 - 文本：俄语、葡萄牙语（巴西）']
+                    # 绝了
+                    for lang in language.split("-"):
+                        data["language"].append(lang.strip())
 
         data["min_req"] = {}
         data["max_req"] = {}
 
-        for i in requirements['systems']:
-            system_type = i["systemType"]
-            details = i["details"]
-            data["min_req"][system_type] = list(map(lambda x: "{}: {}".format(x['title'], x['minimum']), details))
-            data["max_req"][system_type] = list(map(lambda x: "{}: {}".format(x['title'], x['recommended']), details))
+        for i in requirements.get("systems", []):
+            system_type = i.get("systemType", "Unknown")
+            details = i.get("details", "")
+            data["min_req"][system_type] = list(
+                map(
+                    lambda x: "{}: {}".format(x["title"], x.get("minimum", "")), details
+                )
+            )
+            data["max_req"][system_type] = list(
+                map(
+                    lambda x: "{}: {}".format(x["title"], x.get("recommended", "")),
+                    details,
+                )
+            )
 
-        data['level'] = list(map(lambda x: x['src'], requirements["legalTags"])) if requirements.get("legalTags") else ""
+        data["level"] = list(map(lambda x: x["src"], requirements["legalTags"])) if requirements.get("legalTags") else ""
 
         # 生成bbcode
         descr = ""
-        descr += "[img]{}[/img]\n\n".format(data['logo']) if data.get('logo') else ""
+        descr += "[img]{}[/img]\n\n".format(data["logo"]) if data.get("logo") else ""
         descr += "【基本信息】\n\n"
-        descr += "游戏名称：{}\n".format(data['name']) if data.get('name') else ""
-        descr += "商店链接：{}\n".format(data['epic_link']) if data.get('epic_link') else ""
+        descr += "游戏名称：{}\n".format(data["name"]) if data.get("name") else ""
+        descr += "商店链接：{}\n".format(data["epic_link"]) if data.get("epic_link") else ""
         descr += "\n"
-        descr += "【支持语言】\n\n{}\n\n".format('\n'.join(data['language'])) if data.get('language') else ""
-        descr += "【游戏简介】\n\n{}\n\n".format(data['desc']) if data.get('desc') else ""
+        descr += (
+            "【支持语言】\n\n{}\n\n".format("\n".join(data["language"]))
+            if data.get("language")
+            else ""
+        )
+        descr += "【游戏简介】\n\n{}\n\n".format(data["desc"]) if data.get("desc") else ""
 
         req_list = {"min_req": "【最低配置】", "max_req": "【推荐配置】"}
-        for (k, v) in req_list.items():
+        for k, v in req_list.items():
             if k in data:
                 data_ = data[k]
                 descr += "{}\n\n".format(v)
-                for (system, req) in data_.items():
-                    descr += "{}\n{}\n".format(system, "\n".join(req))
+                for system, req in data_.items():
+                    descr += "{}\n{}\n\n".format(system, "\n".join(req))
 
-        descr += "【游戏截图】\n\n{}\n\n".format('\n'.join(map(lambda x: "[img]{}[/img]".format(x), data['screenshot']))) if data.get('screenshot') else ""
-        descr += "【游戏评级】\n\n{}\n\n".format('\n'.join(map(lambda x: "[img]{}[/img]".format(x), data['level']))) if data.get('level') else ""
+        descr += (
+            "【游戏截图】\n\n{}\n\n".format(
+                "\n".join(map(lambda x: "[img]{}[/img]".format(x), data["screenshot"]))
+            )
+            if data.get("screenshot")
+            else ""
+        )
+        descr += (
+            "【游戏评级】\n\n{}\n\n".format(
+                "\n".join(map(lambda x: "[img]{}[/img]".format(x), data["level"]))
+            )
+            if data.get("level")
+            else ""
+        )
 
         self.ret["format"] = descr
         self.ret.update(data)
